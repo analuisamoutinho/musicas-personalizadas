@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+.env*.local
+.next/
+dist/
+.turbo/
+*.tsbuildinfo
+# Promptfoo evaluation outputs
+.promptfoo/
+promptfoo-output/
+.vercel

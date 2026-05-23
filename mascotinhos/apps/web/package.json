@@ -1,0 +1,52 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@ai-sdk/devtools": "^0.0.2",
+    "@ai-sdk/google": "^3.0.1",
+    "@ai-sdk/react": "^3.0.3",
+    "@langfuse/otel": "^5.0.2",
+    "@mascotinhos/bot-engine": "workspace:*",
+    "@mascotinhos/db": "workspace:*",
+    "@mascotinhos/env": "workspace:*",
+    "@mascotinhos/image-gen": "workspace:*",
+    "@mascotinhos/payments": "workspace:*",
+    "@mascotinhos/storage": "workspace:*",
+    "@mascotinhos/ui": "workspace:*",
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/sdk-trace-node": "^2.6.1",
+    "@prisma/client": "catalog:",
+    "@sentry/nextjs": "^10.47.0",
+    "@upstash/qstash": "catalog:",
+    "@vercel/functions": "^3.4.3",
+    "@vercel/speed-insights": "^2.0.0",
+    "ai": "^6.0.3",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "dotenv": "catalog:",
+    "lucide-react": "catalog:",
+    "next": "^16.2.0",
+    "next-themes": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "sonner": "catalog:",
+    "streamdown": "^1.6.10",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@mascotinhos/config": "workspace:*",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/bun": "catalog:",
+    "@types/node": "^20",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "^5"
+  }
+}

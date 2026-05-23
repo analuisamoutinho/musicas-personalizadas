@@ -1,0 +1,3 @@
+{
+  "extends": "@mascotinhos/config/tsconfig.base.json"
+}

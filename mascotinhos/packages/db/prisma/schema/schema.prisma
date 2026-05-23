@@ -1,0 +1,179 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated"
+  moduleFormat = "esm"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ──────────────────────────────────────────────
+// Enums
+// NOTE (D4): PostgreSQL ENUM additions (ALTER TYPE ... ADD VALUE) cannot run
+// inside a transaction. Before adding new values to any enum below, convert
+// the field to String + Zod validation instead of extending the ENUM.
+// ──────────────────────────────────────────────
+
+enum ConversationState {
+  GREETING
+  COLLECTING_PHOTOS
+  COLLECTING_THEME
+  COLLECTING_OUTFIT
+  CONFIRMING_ORDER
+  AWAITING_PAYMENT
+  ABANDONED_1H
+  ABANDONED_24H
+  GENERATING
+  DELIVERING
+  AWAITING_FEEDBACK
+  REVISION_1
+  REVISION_2
+  COMPLETED
+  FAILED
+}
+
+// D1: Separate order business lifecycle from bot conversation state.
+// conversationState = current WhatsApp bot step (transient).
+// orderStatus       = business outcome (durable).
+enum OrderStatus {
+  PENDING
+  PAID
+  GENERATING
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+  REFUNDED
+}
+
+enum ProductType {
+  MASCOTINHO
+}
+
+// ──────────────────────────────────────────────
+// Models
+// ──────────────────────────────────────────────
+
+model Client {
+  id               String    @id @default(cuid())
+  whatsappSenderId String    @unique
+  // phone: unique (nullable-safe — PostgreSQL treats NULLs as distinct in unique constraints)
+  phone            String?   @unique
+  name             String?
+  consentTimestamp DateTime?
+  consentVersion   String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  // D3: Soft-delete for LGPD erasure. Never hard-delete Client rows.
+  // On erasure: set deletedAt = now(), name = null, phone = null, whatsappSenderId = "[deleted-{id}]"
+  deletedAt        DateTime?
+
+  // D3: Restrict — prevents hard-delete cascade onto financial records. Use soft-delete only.
+  orders Order[]
+}
+
+model Order {
+  id              String @id @default(cuid())
+  clientId        String
+  styleTemplateId String?
+  // D1: conversationState = current step in the WhatsApp bot flow
+  conversationState ConversationState @default(GREETING)
+  // D1: orderStatus = business lifecycle (PENDING → PAID → GENERATING → DELIVERED)
+  orderStatus       OrderStatus       @default(PENDING)
+  // photosUrls: max 3 entries — enforced at app layer before every append to prevent webhook-retry duplicates
+  photosUrls        String[]
+  theme             String?
+  outfitDescription String?
+  extraRequests     String?
+  // D2: non-nullable with default R$29.90; update before creating Asaas charge if dynamic pricing is added
+  price             Decimal  @default(29.90)
+  // LGPD: set to (delivery_time + 30 days) when order delivers; nulled after reference photos deleted by cron
+  photosDeleteAt    DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // D3: Restrict — soft-delete Client instead of cascading hard-delete onto Orders
+  client        Client         @relation(fields: [clientId], references: [id], onDelete: Restrict)
+  styleTemplate StyleTemplate? @relation(fields: [styleTemplateId], references: [id], onDelete: SetNull)
+  payments      Payment[]
+  generations   Generation[]
+
+  @@index([clientId])
+  @@index([orderStatus])
+  // Required for abandoned cart scheduler: WHERE conversationState IN (...) AND updatedAt < NOW()-1.5h
+  @@index([conversationState, updatedAt])
+  // Required for LGPD cleanup cron: WHERE photosDeleteAt < NOW() AND photosDeleteAt IS NOT NULL
+  @@index([photosDeleteAt])
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  orderId       String
+  asaasId       String        @unique
+  pixQrCode        String?
+  pixQrImageUrl    String?       // legacy: holds base64 for rows pre-migration; null for new rows
+  pixQrStoragePath String?       // new: `generated/pix-qr/{orderId}.png`
+  amount           Decimal
+  netAmount        Decimal?      @db.Decimal(10, 2) // Asaas net after fees; populated from PAYMENT_CONFIRMED webhook netValue
+  status        PaymentStatus @default(PENDING)
+  confirmedAt   DateTime?
+  splitConfig   Json?         // Audit: stores the split array sent to Asaas (null if no split)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  // Concurrent duplicate PENDING payments: enforce at app layer — check for existing PENDING
+  // payment before creating a new Asaas charge (rapid double-tap guard).
+  @@index([orderId])
+}
+
+model Generation {
+  id               String   @id @default(cuid())
+  orderId          String
+  attemptNumber    Int
+  promptUsed       String
+  imageUrl         String?
+  // qualityScore: expected range 0.0–1.0 (AI self-critique score).
+  // Enforce minimum threshold at app layer before transitioning to DELIVERING.
+  // Null = quality check not yet run; do NOT deliver while null.
+  qualityScore     Float?
+  revisionFeedback String?
+  inputTokens             Int?
+  outputTokens            Int?
+  imageGenerationCostUsd  Decimal? @db.Decimal(10, 6) // OpenAI gpt-image-1 cost in USD
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  // Prevents QStash retry races from writing duplicate rows for the same attempt,
+  // which would corrupt the 2-revision cap (FR-30). Use upsert-on-conflict in consumer.
+  @@unique([orderId, attemptNumber])
+}
+
+model StyleTemplate {
+  id             String      @id @default(cuid())
+  name           String
+  slug           String      @unique
+  promptTemplate String
+  exampleImages  String[]
+  // popularity: always increment atomically at app layer — UPDATE popularity = popularity + 1
+  popularity     Int         @default(0)
+  tags           String[]
+  active         Boolean     @default(true)
+  productType    ProductType @default(MASCOTINHO)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  orders Order[]
+
+  // Required for GREETING state query: WHERE active = true ORDER BY popularity DESC LIMIT 3
+  @@index([active, popularity])
+}

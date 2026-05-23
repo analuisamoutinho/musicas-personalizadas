@@ -1,0 +1,40 @@
+{
+  "name": "@mascotinhos/bot-engine",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit",
+    "test": "bun test",
+    "eval": "npx promptfoo eval",
+    "eval:ci": "npx promptfoo eval --ci",
+    "eval:view": "npx promptfoo view",
+    "simulate:chat": "bun run src/eval/simulate.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^3.0.48",
+    "@sentry/node": "^10.47.0",
+    "@chat-adapter/state-memory": "^4.23.0",
+    "@chat-adapter/state-pg": "^4.23.0",
+    "@chat-adapter/whatsapp": "^4.23.0",
+    "@mascotinhos/db": "workspace:*",
+    "@mascotinhos/env": "workspace:*",
+    "@mascotinhos/payments": "workspace:*",
+    "@mascotinhos/storage": "workspace:*",
+    "@upstash/qstash": "catalog:",
+    "@upstash/redis": "^1.37.0",
+    "ai": "^6.0.3",
+    "chat": "^4.23.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@mascotinhos/config": "workspace:*",
+    "openai": "^4.85.0",
+    "typescript": "^5"
+  }
+}

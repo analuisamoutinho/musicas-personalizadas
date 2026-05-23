@@ -1,0 +1,12 @@
+{
+  "installCommand": "bun install",
+  "buildCommand": "turbo build",
+  "framework": "nextjs",
+  "outputDirectory": "apps/web/.next",
+  "crons": [
+    {
+      "path": "/api/cleanup",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}

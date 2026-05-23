@@ -1,0 +1,12 @@
+{
+  "extends": "@mascotinhos/config/tsconfig.base.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "composite": true
+  },
+  "include": ["src/**/*", "prisma/generated/**/*"],
+  "exclude": ["prisma/seed.ts", "node_modules", "dist"]
+}
