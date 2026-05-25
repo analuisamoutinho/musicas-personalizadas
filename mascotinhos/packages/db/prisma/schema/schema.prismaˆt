@@ -1,4 +1,15 @@
-generator client {
+cat >> packages/db/prisma/schema/schema.prisma << 'EOF'
+
+model MetricaDiaria {
+  id        String   @id @default(cuid())
+  data      DateTime @unique
+  diaSemana String?
+  investido Float    @default(0)
+  leads     Int      @default(0)
+
+  @@index([data])
+}
+EOFgenerator client {
   provider     = "prisma-client"
   output       = "../generated"
   moduleFormat = "esm"
@@ -90,21 +101,6 @@ model Order {
   theme             String?
   outfitDescription String?
   extraRequests     String?
-  productType           String?
-  musicaNomeHomenageado String?
-  musicaVinculo         String?
-  musicaHistoria        String?
-  musicaRitmo           String?
-  musicaVoz             String?
-  musicaFraseFinal      String?
-  musicaTitulo          String?
-  musicaEstiloDetalhado String?
-  musicaLetra           String?
-  musicaPromptSuno      String?
-  musicaLetraGeradaEm   DateTime?
-  musicaAudioPreviewUrl String?
-  musicaAudioFinalUrl   String?
-  revisoesSolicitadas   Int       @default(0)
   // D2: non-nullable with default R$29.90; update before creating Asaas charge if dynamic pricing is added
   price             Decimal  @default(29.90)
   // LGPD: set to (delivery_time + 30 days) when order delivers; nulled after reference photos deleted by cron
@@ -192,3 +188,17 @@ model StyleTemplate {
   // Required for GREETING state query: WHERE active = true ORDER BY popularity DESC LIMIT 3
   @@index([active, popularity])
 }
+cat >> packages/db/prisma/schema/schema.prisma << 'EOF'
+
+model MetricaDiaria {
+  id        String   @id @default(cuid())
+  data      DateTime @unique
+  diaSemana String?
+  investido Float    @default(0)
+  leads     Int      @default(0)
+
+  @@index([data])
+}
+EOF
+nano packages/db/prisma/schema/schema.prisma
+
