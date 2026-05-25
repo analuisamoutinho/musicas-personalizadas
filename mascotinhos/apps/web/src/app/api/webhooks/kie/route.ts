@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       where: { id: orderId },
       data: {
         musicaAudioPreviewUrl: audioUrl,
-        conversationState:     "MUSICA_AWAITING_PREVIEW_APPROVAL",
+        conversationState:     "DELIVERING",
       },
       include: { client: true },
     });
