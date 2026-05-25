@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
         where: { id: pedido.id },
         data:  {
           orderStatus:       "PAID",
-          conversationState: "MUSICA_COMPLETED",
+          conversationState: "COMPLETED",
         },
       }),
     ]);
