@@ -55,7 +55,7 @@ async function chamarOpenAI(systemPrompt: string, userPrompt: string): Promise<s
 /** Extrai apenas o primeiro nome para evitar que a IA confunda com famoso. */
 function extrairPrimeiroNome(nome: string): string {
   return nome.trim().split(/\s+/)[0] ?? nome.trim();
-}return nome.trim().split(/\s+/)[0] ?? nome.trim();
+}
 
 // ─── BLOCO 1 — Título ─────────────────────────────────────────────────────────
 
