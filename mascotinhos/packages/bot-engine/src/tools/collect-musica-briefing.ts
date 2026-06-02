@@ -9,17 +9,6 @@ import prisma from "@mascotinhos/db";
 import { updateOrderState } from "../conversation";
 import { ORDER_ID_PATTERN } from "../order-id";
 
-const RITMOS_VALIDOS = [
-  "pagode",
-  "sertanejo",
-  "sertanejo_universitario",
-  "gospel",
-  "arrocha",
-  "forró",
-  "pop_romântico",
-  "pop_romantico",
-];
-
 function normalizarRitmo(entrada: string): string {
   const mapa: Record<string, string> = {
     pagode: "PAGODE_ROMANTICO",
@@ -275,7 +264,7 @@ export const collectMusicaBriefing = tool({
         await updateOrderState(
           input.orderId,
           "GREETING",
-          "COLLECTING_MUSICA_BRIEFING",
+          "COLLECTING_THEME",
         );
       }
 
@@ -283,14 +272,14 @@ export const collectMusicaBriefing = tool({
       try {
         await updateOrderState(
           input.orderId,
-          "COLLECTING_MUSICA_BRIEFING",
-          "MUSICA_CONFIRMING_ORDER",
+          "COLLECTING_THEME",
+          "CONFIRMING_ORDER",
         );
       } catch (e) {
-        // Se já está em outro estado, tentar ir pra MUSICA_CONFIRMING_ORDER mesmo assim
+        // Se já está em outro estado, forçar para CONFIRMING_ORDER
         await prisma.order.update({
           where: { id: input.orderId },
-          data: { conversationState: "MUSICA_CONFIRMING_ORDER" },
+          data: { conversationState: "CONFIRMING_ORDER" },
         });
       }
 
@@ -321,7 +310,7 @@ export const collectMusicaBriefing = tool({
 
 async function dispararGeracaoMusica(orderId: string) {
   // Importar aqui para evitar circular dependency
-  const { gerarLetra } = await import("../../../web/src/lib/gerar-letra");
+  const { gerarLetra } = await import("../../../../apps/web/src/lib/gerar-letra");
 
   // Aguardar um pouco para garantir que os dados foram salvos
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -338,6 +327,7 @@ async function dispararGeracaoMusica(orderId: string) {
   try {
     const briefing = {
       nomeHomenageado: order.musicaNomeHomenageado,
+      vinculo: order.musicaVinculo || "",
       historia: order.musicaHistoria || "",
       ritmo: (order.musicaRitmo || "SERTANEJO_UNIVERSITARIO") as any,
       voz: (order.musicaVoz || "FEMININA") as any,

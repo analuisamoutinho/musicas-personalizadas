@@ -192,3 +192,13 @@ model StyleTemplate {
   // Required for GREETING state query: WHERE active = true ORDER BY popularity DESC LIMIT 3
   @@index([active, popularity])
 }
+
+model MetricaDiaria {
+  id        String   @id @default(cuid())
+  data      DateTime @unique
+  diaSemana String?
+  investido Float    @default(0)
+  leads     Int      @default(0)
+
+  @@index([data])
+}

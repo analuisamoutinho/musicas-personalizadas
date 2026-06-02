@@ -46,8 +46,8 @@ async function chamarOpenAI(systemPrompt: string, userPrompt: string): Promise<s
     throw new Error(`OpenAI error ${response.status}: ${erro}`);
   }
 
-  const data = await response.json();
-  const conteudo = data.choices?.[0]?.message?.content as string | undefined;
+  const data = await response.json() as { choices?: { message?: { content?: string } }[] };
+  const conteudo = data.choices?.[0]?.message?.content;
   if (!conteudo) throw new Error("OpenAI não retornou conteúdo.");
   return conteudo.trim();
 }
