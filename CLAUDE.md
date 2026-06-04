@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Mascotinhos** — An AI-powered platform for generating children's illustrations, delivered via WhatsApp. The project uses the BMAD methodology for planning (artifacts in `.bmad_output/` and `design-artifacts/`).
+**Músicas Personalizadas** — An AI-powered platform for generating personalized songs, delivered via WhatsApp. The project uses the BMAD methodology for planning (artifacts in `.bmad_output/` and `design-artifacts/`).
 
 The actual application code lives in `mascotinhos/`, which is a **Turborepo monorepo** scaffolded with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack).
 

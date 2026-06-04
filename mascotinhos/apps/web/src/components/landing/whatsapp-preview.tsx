@@ -47,7 +47,7 @@ export default function WhatsAppPreview({ scene }: WhatsAppPreviewProps) {
           🎈
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[11px] font-bold leading-tight truncate">Estúdio Mascotinhos</div>
+          <div className="text-[11px] font-bold leading-tight truncate">Estúdio Músicas Personalizadas</div>
           <div className="text-[9px] opacity-80 leading-tight">online</div>
         </div>
       </div>

@@ -4,9 +4,9 @@ import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
 
 export const metadata: Metadata = {
-  title: "Termos de Uso | Mascotinhos",
+  title: "Termos de Uso | Músicas Personalizadas",
   description:
-    "Termos e condições do serviço Mascotinhos: geração de ilustrações personalizadas via WhatsApp.",
+    "Termos e condições do serviço Músicas Personalizadas: geração de ilustrações personalizadas via WhatsApp.",
   robots: { index: false, follow: false },
   alternates: {
     canonical: "/terms",
@@ -36,7 +36,7 @@ export default function TermsPage() {
           </p>
 
           <p className="text-on-surface-variant font-body leading-relaxed mb-6">
-            Bem-vindo à <strong className="text-on-surface">Mascotinhos</strong>. Ao utilizar
+            Bem-vindo à <strong className="text-on-surface">Músicas Personalizadas</strong>. Ao utilizar
             nosso serviço de geração de ilustrações personalizadas via WhatsApp, você concorda com
             estes Termos de Uso. Leia com atenção antes de realizar um pedido.
           </p>
@@ -46,7 +46,7 @@ export default function TermsPage() {
             1. Descrição do Serviço
           </h2>
           <p className="text-on-surface-variant font-body leading-relaxed mb-4">
-            A Mascotinhos oferece um serviço de geração de{" "}
+            A Músicas Personalizadas oferece um serviço de geração de{" "}
             <strong className="text-on-surface">ilustrações digitais personalizadas</strong>{" "}
             ("mascotinhos") para festas infantis. O processo ocorre integralmente via WhatsApp:
           </p>
@@ -90,7 +90,7 @@ export default function TermsPage() {
             </li>
           </ul>
           <p className="text-on-surface-variant font-body leading-relaxed mb-4">
-            A Mascotinhos não utiliza imagens de crianças em materiais de marketing ou
+            A Músicas Personalizadas não utiliza imagens de crianças em materiais de marketing ou
             publicidade sem autorização individual e expressa por escrito do responsável legal.
           </p>
 
@@ -172,7 +172,7 @@ export default function TermsPage() {
             rodada de revisão gera uma nova ilustração, substituindo a anterior.
           </p>
           <p className="text-on-surface-variant font-body leading-relaxed mb-4">
-            Revisões adicionais além das 2 rodadas incluídas ficam a critério da Mascotinhos
+            Revisões adicionais além das 2 rodadas incluídas ficam a critério da Músicas Personalizadas
             e podem implicar custo adicional, a ser acordado previamente.
           </p>
 
@@ -232,7 +232,7 @@ export default function TermsPage() {
             9. Limitação de Responsabilidade
           </h2>
           <p className="text-on-surface-variant font-body leading-relaxed mb-4">
-            A Mascotinhos emprega melhores esforços para entregar ilustrações de alta
+            A Músicas Personalizadas emprega melhores esforços para entregar ilustrações de alta
             qualidade. No entanto, por se tratar de geração por inteligência artificial, não
             garantimos semelhança perfeita com a criança. A política de revisões (2 rodadas) é o
             mecanismo previsto para adequar o resultado às expectativas do cliente.
@@ -248,13 +248,13 @@ export default function TermsPage() {
             10. Propriedade Intelectual
           </h2>
           <p className="text-on-surface-variant font-body leading-relaxed mb-4">
-            A Mascotinhos não reivindica propriedade sobre as ilustrações individuais
+            A Músicas Personalizadas não reivindica propriedade sobre as ilustrações individuais
             entregues aos clientes. A propriedade do arquivo digital é do comprador, conforme
             disposto na cláusula 3.
           </p>
           <p className="text-on-surface-variant font-body leading-relaxed mb-4">
             Os templates de estilo, prompts e sistemas utilizados para gerar as ilustrações são
-            propriedade exclusiva da Mascotinhos e protegidos como segredo comercial.
+            propriedade exclusiva da Músicas Personalizadas e protegidos como segredo comercial.
           </p>
 
           {/* 11. Legislação Aplicável */}
@@ -289,7 +289,7 @@ export default function TermsPage() {
           </p>
 
           <p className="text-sm text-on-surface-variant font-body mt-12 pt-6 bg-surface-container-low rounded px-3 py-2">
-            Última atualização: março de 2026. Mascotinhos
+            Última atualização: março de 2026. Músicas Personalizadas
           </p>
         </article>
       </main>

@@ -33,27 +33,27 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Mascotinhos | Sua criança como personagem exclusivo",
+  title: "Músicas Personalizadas | A música perfeita para quem você ama",
   description:
-    "Transformamos a foto da sua criança em uma ilustração personalizada para convites, lembranças e topo de bolo. R$29,90 via PIX.",
+    "Criamos músicas personalizadas únicas pelo WhatsApp. Para aniversários, declarações e momentos especiais. Via PIX.",
   icons: {
     icon: "/favicon.ico",
     apple: "/logo.png",
   },
   openGraph: {
-    title: "Mascotinhos | Sua criança como personagem exclusivo",
+    title: "Músicas Personalizadas | A música perfeita para quem você ama",
     description:
-      "Ilustrações personalizadas para festas infantis. Convites, lembranças e topo de bolo. R$29,90 via PIX. Pronto em minutos pelo WhatsApp.",
+      "Músicas personalizadas para aniversários, declarações e momentos especiais. Pronto em minutos pelo WhatsApp.",
     type: "website",
     locale: "pt_BR",
-    siteName: "Mascotinhos",
-    images: [{ url: "/logo.png", width: 800, height: 800, alt: "Mascotinhos" }],
+    siteName: "Músicas Personalizadas",
+    images: [{ url: "/logo.png", width: 800, height: 800, alt: "Músicas Personalizadas" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mascotinhos | Sua criança como personagem exclusivo",
+    title: "Músicas Personalizadas | A música perfeita para quem você ama",
     description:
-      "Ilustrações personalizadas para festas infantis. R$29,90 via PIX.",
+      "Músicas personalizadas para momentos especiais. Via PIX.",
     images: ["/logo.png"],
   },
 };

@@ -43,7 +43,7 @@ adapterInternal.buildMediaAttachment = (mediaId, type, mimeType, name) => ({
 });
 
 export const bot = new Chat({
-  userName: "mascotinhos",
+  userName: "musicaspersonalizadas",
   state: stateAdapter,
   adapters: { whatsapp: whatsappAdapter },
   concurrency: {

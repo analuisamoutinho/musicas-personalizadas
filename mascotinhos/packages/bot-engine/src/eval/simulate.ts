@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 /**
- * CLI Conversation Simulator for the Mascotinhos bot agent.
+ * CLI Conversation Simulator for the Músicas Personalizadas bot agent.
  *
  * Calls processMessage() directly — no WhatsApp, no database.
  * Shows tool calls, state transitions, and agent responses.
@@ -242,7 +242,7 @@ async function runScenario(name: string) {
 }
 
 async function runInteractive() {
-  console.log(`\n${COLORS.bold}Mascotinhos Conversation Simulator${COLORS.reset}`);
+  console.log(`\n${COLORS.bold}Músicas Personalizadas Conversation Simulator${COLORS.reset}`);
   console.log(`${COLORS.dim}Type messages as the client. Type /quit to exit, /state to see current state, /reset to restart.${COLORS.reset}\n`);
 
   const rl = createInterface({

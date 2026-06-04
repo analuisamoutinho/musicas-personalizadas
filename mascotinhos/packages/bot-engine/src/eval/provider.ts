@@ -1,5 +1,5 @@
 /**
- * Custom Promptfoo provider that wraps the Mascotinhos bot agent.
+ * Custom Promptfoo provider that wraps the Músicas Personalizadas bot agent.
  *
  * Promptfoo calls `callApi()` for each test case. We build the system prompt
  * from the scenario's order context, call the real AI agent (via processMessage),

@@ -4,7 +4,7 @@ import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
 
 export const metadata: Metadata = {
-  title: "Política de Privacidade | Mascotinhos",
+  title: "Política de Privacidade | Músicas Personalizadas",
   description:
     "Como tratamos os seus dados e os dados do seu filho conforme a LGPD (Lei 13.709/2018).",
   robots: { index: false, follow: false },
@@ -36,7 +36,7 @@ export default function PrivacyPage() {
           </p>
 
           <p className="text-on-surface-variant font-body leading-relaxed mb-6">
-            A <strong className="text-on-surface">Mascotinhos</strong> respeita a sua
+            A <strong className="text-on-surface">Músicas Personalizadas</strong> respeita a sua
             privacidade e a de seu filho. Esta Política de Privacidade descreve como coletamos,
             usamos e protegemos os seus dados pessoais em conformidade com a{" "}
             <strong className="text-on-surface">Lei Geral de Proteção de Dados Pessoais (LGPD - Lei 13.709/2018)</strong>{" "}
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
             1. Controlador de Dados
           </h2>
           <p className="text-on-surface-variant font-body leading-relaxed mb-4">
-            O controlador dos seus dados pessoais é a <strong className="text-on-surface">Mascotinhos</strong>,
+            O controlador dos seus dados pessoais é a <strong className="text-on-surface">Músicas Personalizadas</strong>,
             operada por um microempreendedor individual (MEI) com sede no Brasil. Para entrar em
             contato com nosso responsável pela proteção de dados (DPO), utilize nosso canal de
             atendimento via WhatsApp disponível no rodapé desta página.
@@ -164,7 +164,7 @@ export default function PrivacyPage() {
             como suboperador de dados na modalidade de processamento de imagens via API.
           </p>
           <p className="text-on-surface-variant font-body leading-relaxed mb-4">
-            A Mascotinhos mantém um{" "}
+            A Músicas Personalizadas mantém um{" "}
             <strong className="text-on-surface">Acordo de Processamento de Dados (DPA)</strong> com
             a OpenAI, conforme exigido pela LGPD para transferências internacionais de dados (Art.
             33). A OpenAI se compromete contratualmente a não usar os dados de API para treinar seus
@@ -268,7 +268,7 @@ export default function PrivacyPage() {
           </p>
 
           <p className="text-sm text-on-surface-variant font-body mt-12 pt-6 bg-surface-container-low rounded px-3 py-2">
-            Última atualização: março de 2026. Mascotinhos
+            Última atualização: março de 2026. Músicas Personalizadas
           </p>
         </article>
       </main>

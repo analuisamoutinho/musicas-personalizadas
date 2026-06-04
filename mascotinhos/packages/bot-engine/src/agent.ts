@@ -52,7 +52,7 @@ export async function processMessage(
   const systemPrompt = buildSystemPrompt(order);
 
   const agent = new ToolLoopAgent({
-    id: "mascotinhos-bot",
+    id: "musicas-personalizadas-bot",
     model: openai("gpt-5.4-mini"),
     tools: allTools,
     stopWhen: stepCountIs(5),

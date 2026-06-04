@@ -1,0 +1,48 @@
+// Adicionar ao schema.prisma existente
+// em: mascotinhos/packages/db/prisma/schema/schema.prisma
+
+// ─── Adicionar ao enum ConversationState ─────────────────────────────────────
+// ATENÇÃO: PostgreSQL não permite adicionar valores a enum dentro de transação.
+// Conforme nota D4 do schema original, converter para String + validação Zod
+// em vez de extender o enum. Adicione os campos abaixo como String.
+
+// ─── Adicionar ao enum ProductType ───────────────────────────────────────────
+// enum ProductType {
+//   MASCOTINHO
+//   MUSICA_PERSONALIZADA  ← novo
+// }
+
+// ─── Adicionar ao model Order ─────────────────────────────────────────────────
+
+// Campos novos para música personalizada:
+//
+//   productType               ProductType  @default(MASCOTINHO)
+//
+//   musicaNomeHomenageado     String?
+//   musicaVinculo             String?      // "namorada", "mãe", etc. ← NOVO
+//   musicaHistoria            String?      @db.Text
+//   musicaRitmo               String?
+//   musicaVoz                 String?      // "MASCULINA" | "FEMININA"
+//   musicaFraseFinal          String?
+//
+//   musicaTitulo              String?      // ← NOVO (bloco 1)
+//   musicaEstiloDetalhado     String?      // ← NOVO (bloco 2) — copiar no campo Style do Suno
+//   musicaLetra               String?      @db.Text
+//   musicaPromptSuno          String?      // ← NOVO (bloco 4) — ≤450 chars para o Suno/Kie
+//   musicaLetraGeradaEm       DateTime?
+//
+//   musicaAudioPreviewUrl     String?
+//   musicaAudioFinalUrl       String?
+//   revisoesSolicitadas       Int          @default(0)
+
+// ─── Novo model MetricaDiaria ─────────────────────────────────────────────────
+
+model MetricaDiaria {
+  id        String   @id @default(cuid())
+  data      DateTime @unique
+  diaSemana String?
+  investido Float    @default(0)
+  leads     Int      @default(0)
+
+  @@index([data])
+}

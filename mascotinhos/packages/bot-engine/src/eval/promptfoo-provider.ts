@@ -1,5 +1,5 @@
 /**
- * Promptfoo custom provider for the Mascotinhos bot agent.
+ * Promptfoo custom provider for the Músicas Personalizadas bot agent.
  *
  * Builds the system prompt dynamically from test case vars (order context)
  * and delegates the actual LLM call to the OpenAI SDK (same model used in
@@ -49,7 +49,7 @@ function getClient(): OpenAI {
 }
 
 module.exports = {
-  id: () => `mascotinhos-bot (${MODEL})`,
+  id: () => `musicas-personalizadas-bot (${MODEL})`,
 
   async callApi(
     _prompt: string,

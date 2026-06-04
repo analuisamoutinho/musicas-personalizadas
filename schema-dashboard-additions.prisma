@@ -1,0 +1,20 @@
+// Adicionar ao schema.prisma existente
+
+// Tabela para os dados que vêm da conta de anúncios (preenchida manualmente por enquanto)
+// Futuramente pode ser populada automaticamente via Meta Ads API
+model MetricaDiaria {
+  id          String   @id @default(cuid())
+  data        DateTime @unique // apenas a data, sem hora
+  diaSemana   String?  // "segunda", "terça", etc.
+  investido   Float    @default(0)
+  leads       Int      @default(0)
+
+  @@index([data])
+}
+
+// Adicionar este campo ao model Pedido existente:
+// revisoesSolicitadas Int @default(0)
+//
+// Quando o lead pedir alteração após receber o preview,
+// você incrementa esse campo via PATCH /api/pedidos/:id
+// com { revisoesSolicitadas: pedido.revisoesSolicitadas + 1 }

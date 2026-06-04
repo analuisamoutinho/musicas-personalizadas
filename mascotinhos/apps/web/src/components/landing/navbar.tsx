@@ -22,14 +22,14 @@ export default function Navbar({ phoneNumber }: { phoneNumber: string }) {
           <a href="/" className="flex items-center gap-2.5">
             <Image
               src="/logo.svg"
-              alt="Mascotinhos"
+              alt="Músicas Personalizadas"
               width={38}
               height={38}
               className="h-9 w-9 -rotate-6"
               priority
             />
             <span className="text-primary font-headline text-xl md:text-[22px] font-extrabold tracking-tight">
-              Mascotinhos
+              Músicas Personalizadas
             </span>
           </a>
           <a

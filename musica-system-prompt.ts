@@ -1,7 +1,7 @@
 // mascotinhos/packages/bot-engine/src/prompts/musica-system-prompt.ts
 //
 // System prompt para o bot de músicas personalizadas.
-// Segue EXATAMENTE o mesmo padrão do buildSystemPrompt() do Músicas Personalizadas:
+// Segue EXATAMENTE o mesmo padrão do buildSystemPrompt() do Mascotinhos:
 // — seção estática no topo (maximiza cache do prompt)
 // — seção dinâmica ao final (contexto do pedido)
 

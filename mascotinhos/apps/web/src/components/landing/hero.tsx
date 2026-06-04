@@ -95,7 +95,7 @@ export default function Hero({ phoneNumber }: { phoneNumber: string }) {
     >
       <div className="mx-auto max-w-6xl text-center">
         <span className="inline-flex items-center gap-2 bg-tertiary-container text-on-surface px-4 py-1.5 rounded-full text-xs font-bold -rotate-2 shadow-[0_6px_18px_rgba(252,202,109,0.5)]">
-          🎉 mais de 2.347 mascotinhos esse mês
+          🎉 mais de 2.347 músicas esse mês
         </span>
 
         <h1 className="mt-6 mb-6 mx-auto max-w-5xl font-headline font-extrabold leading-[0.95] tracking-[-0.04em] text-on-surface text-[clamp(2.75rem,9vw,6.5rem)]">

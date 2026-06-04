@@ -43,10 +43,10 @@ export default function Footer({ phoneNumber }: { phoneNumber: string }) {
           aria-hidden="true"
           className="h-7 w-7 brightness-0 invert opacity-90"
         />
-        <p className="font-headline font-extrabold text-[22px] text-surface">Mascotinhos</p>
+        <p className="font-headline font-extrabold text-[22px] text-surface">Músicas Personalizadas</p>
 
         <p className="text-[13px] opacity-70 max-w-md" suppressHydrationWarning>
-          &copy; {new Date().getFullYear()} Mascotinhos. Atendemos pelo WhatsApp.
+          &copy; {new Date().getFullYear()} Músicas Personalizadas. Atendemos pelo WhatsApp.
         </p>
 
         <p className="text-sm mt-2" id="contato">
