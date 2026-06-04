@@ -9,7 +9,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@mascotinhos/db";
 
-const PRECO_UNITARIO = 19.90; // R$ por música — ajuste conforme seu preço
+const PRECO_UNITARIO = Number(process.env.PRECO_MUSICA ?? 39.90);
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       data: {
         orderId,
         asaasId:  pix.paymentId,   // reutilizando campo asaasId para o MP paymentId
-        amount:   19.90,
+        amount:   Number(process.env.PRECO_MUSICA ?? 39.90),
         status:   "PENDING",
         pixQrCode: pix.qrCode,
       },
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     // 4. Enviar mensagem com o PIX
     await enviarMensagemWhatsApp({
       to:   telefone,
-      text: `Gostou? 😊\nPara receber o arquivo completo, faça o Pix de *R$19,90*:\n\n${pix.qrCode}`,
+      text: `Gostou? 😊\nPara receber o arquivo completo, faça o Pix de *R$${process.env.PRECO_MUSICA ?? "39,90"}*:\n\n${pix.qrCode}`,
     });
 
     console.log(JSON.stringify({
