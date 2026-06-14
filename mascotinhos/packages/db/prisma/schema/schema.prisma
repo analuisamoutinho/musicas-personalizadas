@@ -64,7 +64,6 @@ model Client {
   whatsappSenderId String    @unique
   // phone: unique (nullable-safe — PostgreSQL treats NULLs as distinct in unique constraints)
   phone            String?   @unique
-  email            String?   @unique
   name             String?
   consentTimestamp DateTime?
   consentVersion   String?

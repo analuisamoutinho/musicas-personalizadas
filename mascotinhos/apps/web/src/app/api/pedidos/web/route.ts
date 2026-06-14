@@ -32,19 +32,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Find or create client by email
-    let client = await prisma.client.findUnique({ where: { email } });
-    if (!client) {
-      client = await prisma.client.create({
-        data: {
-          whatsappSenderId: `web_${crypto.randomUUID()}`,
-          email,
-          name: nomeCliente,
-        },
-      });
-    } else if (!client.name) {
-      await prisma.client.update({ where: { id: client.id }, data: { name: nomeCliente } });
-    }
+    // Create a new client for each web order (email migration pending)
+    const client = await prisma.client.create({
+      data: {
+        whatsappSenderId: `web_${crypto.randomUUID()}`,
+        name: nomeCliente,
+      },
+    });
 
     const order = await prisma.order.create({
       data: {
@@ -61,7 +55,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create Asaas customer (uses email as external reference)
+    // Create Asaas customer using email as external reference
     const asaasCustomer = await createOrUpdateCustomer(email, nomeCliente);
 
     // Create PIX charge
