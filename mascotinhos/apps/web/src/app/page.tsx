@@ -4,6 +4,7 @@ import Hero from "@/components/landing/hero";
 import LiveTicker from "@/components/landing/live-ticker";
 import HowItWorks from "@/components/landing/how-it-works";
 import Benefits from "@/components/landing/benefits";
+import MusicCategories from "@/components/landing/music-categories";
 import StyleBrowser from "@/components/styles/style-browser";
 import Pricing from "@/components/landing/pricing";
 import Testimonials from "@/components/landing/testimonials";
@@ -57,6 +58,7 @@ export default async function Home() {
         <div className="confetti-bg fixed inset-0 pointer-events-none z-0" aria-hidden="true" />
         <Hero />
         <LiveTicker />
+        <MusicCategories />
         <HowItWorks />
         <Benefits />
         {styles.length > 0 && <StyleBrowser styles={styles} />}
