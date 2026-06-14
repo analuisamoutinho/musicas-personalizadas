@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import prisma from "@mascotinhos/db";
-import { createOrUpdateCustomer, createPixCharge } from "@mascotinhos/payments";
+import { createMpPixCharge } from "@/lib/mercadopago";
 import { sendOrderConfirmationEmail } from "@/lib/email";
 
 function getRedis(): Redis | null {
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Create a new client for each web order (email migration pending)
+    // Create client record
     const client = await prisma.client.create({
       data: {
         whatsappSenderId: `web_${crypto.randomUUID()}`,
@@ -47,6 +47,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // Create order
     const order = await prisma.order.create({
       data: {
         client: { connect: { id: client.id } },
@@ -62,17 +63,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Create Asaas customer using email as external reference
-    const asaasCustomer = await createOrUpdateCustomer(email, nomeCliente);
-
-    // Create PIX charge
-    const pix = await createPixCharge(asaasCustomer.id, order.id, 29.90);
+    // Create PIX via Mercado Pago
+    const pix = await createMpPixCharge(email, order.id, 29.90);
 
     // Store payment record
     await prisma.payment.create({
       data: {
         orderId: order.id,
-        asaasId: pix.chargeId,
+        asaasId: pix.paymentId, // reusing field for MP payment id
         pixQrCode: pix.pixCopyPaste,
         pixQrImageUrl: `data:image/png;base64,${pix.pixQrCodeBase64}`,
         amount: 29.90,
@@ -80,7 +78,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Store email in Redis for delivery notification (TTL 7 days) — non-blocking
+    // Store email in Redis for delivery notification (TTL 7 days)
     try {
       const redis = getRedis();
       if (redis) {
@@ -102,6 +100,6 @@ export async function POST(req: NextRequest) {
     });
   } catch (err) {
     console.error("[POST /api/pedidos/web]", err);
-    return NextResponse.json({ erro: "Erro interno" }, { status: 500 });
+    return NextResponse.json({ erro: String(err) }, { status: 500 });
   }
 }
