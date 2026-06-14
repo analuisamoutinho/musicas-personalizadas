@@ -1,13 +1,12 @@
-// mascotinhos/apps/web/src/app/api/webhooks/kie/route.ts
-//
-// Recebe callback da Kie.ai quando o áudio termina de ser gerado.
-// Kie chama POST nessa URL com os dados do taskId e audioUrl.
-// Em seguida: salva no banco, gera PIX, envia preview + PIX via WhatsApp.
-
 import { NextRequest, NextResponse } from "next/server";
+import { Redis } from "@upstash/redis";
 import prisma from "@mascotinhos/db";
-import { gerarPix } from "@/lib/mercadopago-service";
-import { enviarMensagemWhatsApp, enviarAudioWhatsApp } from "@/lib/whatsapp-service";
+import { sendMusicReadyEmail } from "@/lib/email";
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,7 +17,6 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    // Kie.ai envia o taskId e os dados do áudio no callback
     const sunoData = body?.data?.response?.sunoData?.[0]
       ?? body?.response?.sunoData?.[0]
       ?? body?.sunoData?.[0];
@@ -30,60 +28,36 @@ export async function POST(req: NextRequest) {
 
     const audioUrl: string = sunoData.audioUrl;
 
-    // 1. Salvar URL do preview no banco
-    const pedido = await prisma.order.update({
+    // Save audio URL and mark order as delivered
+    const order = await prisma.order.update({
       where: { id: orderId },
       data: {
+        musicaAudioFinalUrl: audioUrl,
         musicaAudioPreviewUrl: audioUrl,
-        conversationState:     "DELIVERING",
+        conversationState: "DELIVERING",
+        orderStatus: "DELIVERED",
       },
-      include: { client: true },
     });
 
-    const telefone = pedido.client.whatsappSenderId;
-
-    // 2. Gerar PIX via Mercado Pago
-    const pix = await gerarPix({
-      orderId,
-      nomeCliente:    pedido.musicaNomeHomenageado ?? "Cliente",
-      telefoneCliente: telefone,
-    });
-
-    // Salvar paymentId no banco
-    await prisma.payment.create({
-      data: {
+    // Send email notification if we have the client's email
+    const cached = await redis.get<string>(`order_email:${orderId}`);
+    if (cached) {
+      const { email, nomeCliente, nomeHomenageado } = JSON.parse(typeof cached === "string" ? cached : JSON.stringify(cached));
+      sendMusicReadyEmail({
+        to: email,
+        nomeCliente,
+        nomeHomenageado,
         orderId,
-        asaasId:  pix.paymentId,   // reutilizando campo asaasId para o MP paymentId
-        amount:   Number(process.env.PRECO_MUSICA ?? 39.90),
-        status:   "PENDING",
-        pixQrCode: pix.qrCode,
-      },
-    });
+        musicaTitulo: order.musicaTitulo,
+        audioUrl,
+      }).catch((e) => console.error("[email] music ready failed", e));
+    }
 
-    // 3. Enviar áudio como prévia via WhatsApp
-    await enviarAudioWhatsApp({
-      to:       telefone,
-      audioUrl: audioUrl,
-      caption:  "Aqui está sua prévia 🎶 Escuta com atenção!",
-    });
-
-    // 4. Enviar mensagem com o PIX
-    await enviarMensagemWhatsApp({
-      to:   telefone,
-      text: `Gostou? 😊\nPara receber o arquivo completo, faça o Pix de *R$${process.env.PRECO_MUSICA ?? "39,90"}*:\n\n${pix.qrCode}`,
-    });
-
-    console.log(JSON.stringify({
-      level: "info",
-      event: "kie_audio_entregue",
-      orderId,
-      audioUrl,
-    }));
+    console.log(JSON.stringify({ level: "info", event: "kie_audio_entregue", orderId, audioUrl }));
 
     return NextResponse.json({ sucesso: true });
   } catch (err) {
     console.error("[kie-webhook]", err);
-    // Retornar 200 mesmo em erro para Kie não reenviar infinitamente
     return NextResponse.json({ erro: String(err) }, { status: 200 });
   }
 }

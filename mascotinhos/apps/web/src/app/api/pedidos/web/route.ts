@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Redis } from "@upstash/redis";
 import prisma from "@mascotinhos/db";
 import { createOrUpdateCustomer, createPixCharge } from "@mascotinhos/payments";
+import { sendOrderConfirmationEmail } from "@/lib/email";
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -72,6 +79,14 @@ export async function POST(req: NextRequest) {
         status: "PENDING",
       },
     });
+
+    // Store email in Redis for delivery notification (TTL 7 days)
+    await redis.set(`order_email:${order.id}`, JSON.stringify({ email, nomeCliente, nomeHomenageado }), { ex: 604800 });
+
+    // Send confirmation email (non-blocking)
+    sendOrderConfirmationEmail({ to: email, nomeCliente, nomeHomenageado, orderId: order.id }).catch(
+      (e) => console.error("[email] order confirmation failed", e)
+    );
 
     return NextResponse.json({
       orderId: order.id,

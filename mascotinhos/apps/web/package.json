@@ -35,6 +35,7 @@
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "resend": "^6.12.4",
     "sonner": "catalog:",
     "streamdown": "^1.6.10",
     "zod": "catalog:"

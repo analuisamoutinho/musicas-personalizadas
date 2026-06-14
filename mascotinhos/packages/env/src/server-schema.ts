@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 export const serverSchemaSpec = {
+  RESEND_API_KEY: z.string().min(1).optional(),
+  RESEND_FROM_EMAIL: z.string().email().optional(),
   DATABASE_URL: z.string().url(),
   DIRECT_URL: z.string().url().optional(),
   SUPABASE_URL: z.string().url(),
