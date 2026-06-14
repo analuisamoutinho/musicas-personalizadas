@@ -1,10 +1,7 @@
 import Image from "next/image";
-import { MessageCircle } from "lucide-react";
-import { buildWhatsAppLink } from "@/lib/whatsapp";
+import { Music } from "lucide-react";
 
-export default function Navbar({ phoneNumber }: { phoneNumber: string }) {
-  const waLink = buildWhatsAppLink(phoneNumber, "Oi! Quero fazer meu mascotinho!");
-
+export default function Navbar() {
   return (
     <>
       {/* Skip to main content - first focusable element on page for keyboard/SR users */}
@@ -33,12 +30,10 @@ export default function Navbar({ phoneNumber }: { phoneNumber: string }) {
             </span>
           </a>
           <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/pedido"
             className="inline-flex items-center gap-2 bg-on-surface text-white px-5 py-2.5 rounded-full font-bold text-sm -rotate-2 hover:rotate-0 hover:scale-105 transition-transform duration-200 shadow-[0_6px_18px_rgba(0,0,0,0.18)] focus-visible:ring-2 focus-visible:ring-secondary-container focus-visible:ring-offset-2 focus-visible:outline-none"
           >
-            <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+            <Music className="h-3.5 w-3.5" aria-hidden="true" />
             Quero o meu
           </a>
         </nav>

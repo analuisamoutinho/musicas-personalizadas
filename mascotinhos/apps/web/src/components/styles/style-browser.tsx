@@ -5,7 +5,7 @@ interface StyleBrowserProps {
     id: string;
     name: string;
     imageSrc: string;
-    whatsappLink: string;
+    ctaHref: string;
   }>;
 }
 
@@ -53,10 +53,8 @@ export default function StyleBrowser({ styles }: StyleBrowserProps) {
           {styles.map((style) => (
             <a
               key={style.id}
-              href={style.whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Quero o estilo ${style.name}, abre o WhatsApp`}
+              href={style.ctaHref}
+              aria-label={`Quero o estilo ${style.name}`}
               className="group relative aspect-[2/3] rounded-2xl overflow-hidden cursor-pointer transition-transform duration-300 hover:-translate-y-1.5 hover:scale-[1.02] focus-visible:ring-2 focus-visible:ring-tertiary-container focus-visible:ring-offset-2 focus-visible:ring-offset-on-surface focus-visible:outline-none"
             >
               <Image

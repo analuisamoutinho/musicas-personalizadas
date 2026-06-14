@@ -1,16 +1,13 @@
 import { ArrowRight } from "lucide-react";
-import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 const perks = [
-  "Arquivo em alta resolução",
-  "Cenário à sua escolha",
-  "Pequenos ajustes inclusos",
-  "Entrega no WhatsApp",
+  "Música com letra exclusiva",
+  "Estilo musical à sua escolha",
+  "Voz masculina ou feminina",
+  "Entrega direto no site",
 ];
 
-export default function Pricing({ phoneNumber }: { phoneNumber: string }) {
-  const waLink = buildWhatsAppLink(phoneNumber, "Oi! Quero fazer meu mascotinho!");
-
+export default function Pricing() {
   return (
     <section
       aria-label="Preço"
@@ -39,7 +36,7 @@ export default function Pricing({ phoneNumber }: { phoneNumber: string }) {
           </span>
 
           <div className="text-[13px] font-bold text-on-surface-variant tracking-[0.18em] uppercase">
-            Um Mascotinho exclusivo
+            Uma música exclusiva
           </div>
 
           <div className="mt-3 flex items-center justify-center gap-2 text-on-surface-variant">
@@ -75,9 +72,7 @@ export default function Pricing({ phoneNumber }: { phoneNumber: string }) {
           </ul>
 
           <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/pedido"
             className="inline-flex items-center gap-2.5 bg-gradient-to-br from-primary to-primary-container text-white px-7 py-4 rounded-full font-extrabold text-base -rotate-2 hover:rotate-0 hover:scale-[1.04] transition-all duration-200 sticker-shadow sticker-shadow-hover focus-visible:ring-2 focus-visible:ring-secondary-container focus-visible:ring-offset-2 focus-visible:outline-none"
           >
             Quero o meu agora!

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { buildWhatsAppLink } from "@/lib/whatsapp";
 
 // Three responsive size/position tiers, copied from the mockup so the
 // floating gallery doesn't crowd at 375px (small mobile) and reads at scale
@@ -85,8 +84,8 @@ const galleryCards = [
   },
 ];
 
-export default function Hero({ phoneNumber }: { phoneNumber: string }) {
-  const waLink = buildWhatsAppLink(phoneNumber, "Oi! Quero fazer meu mascotinho!");
+export default function Hero() {
+  const waLink = "/pedido";
 
   return (
     <section
@@ -122,11 +121,9 @@ export default function Hero({ phoneNumber }: { phoneNumber: string }) {
 
         <a
           href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
           className="inline-flex items-center gap-3 bg-gradient-to-br from-primary to-primary-container text-white px-8 py-5 md:px-9 md:py-[22px] rounded-full font-extrabold text-lg md:text-[19px] -rotate-3 hover:rotate-[-1deg] hover:scale-[1.04] transition-all duration-200 sticker-shadow sticker-shadow-hover focus-visible:ring-2 focus-visible:ring-secondary-container focus-visible:ring-offset-2 focus-visible:outline-none"
         >
-          Quero o mascotinho!
+          Quero a minha música!
           <ArrowRight className="h-[22px] w-[22px]" aria-hidden="true" strokeWidth={2.5} />
         </a>
 

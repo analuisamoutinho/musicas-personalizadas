@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { env } from "@mascotinhos/env/web";
 import Navbar from "@/components/landing/navbar";
 import Footer from "@/components/landing/footer";
 
@@ -14,11 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
-  const phoneNumber = env.NEXT_PUBLIC_WHATSAPP_NUMBER;
-
   return (
     <>
-      <Navbar phoneNumber={phoneNumber} />
+      <Navbar />
       <main
         id="main-content"
         className="bg-surface min-h-screen pt-20"
@@ -293,7 +290,7 @@ export default function TermsPage() {
           </p>
         </article>
       </main>
-      <Footer phoneNumber={phoneNumber} />
+      <Footer />
     </>
   );
 }
