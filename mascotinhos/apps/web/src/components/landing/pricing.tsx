@@ -1,10 +1,12 @@
 import { ArrowRight } from "lucide-react";
 
 const perks = [
-  "Música com letra exclusiva",
-  "Estilo musical à sua escolha",
-  "Voz masculina ou feminina",
-  "Entrega direto no site",
+  "Música totalmente personalizada",
+  "Letra com nomes, datas e momentos reais",
+  "Entrega rápida no site",
+  "Revisão inclusa",
+  "Pode ser usada para gravação futura",
+  "Texto pronto para compartilhar",
 ];
 
 export default function Pricing() {
@@ -15,10 +17,10 @@ export default function Pricing() {
     >
       <div className="mx-auto max-w-4xl">
         <span className="inline-flex items-center gap-2.5 font-script font-bold text-2xl text-primary mb-1.5 before:content-[''] before:w-8 before:h-0.5 before:bg-primary before:rounded-full after:content-[''] after:w-8 after:h-0.5 after:bg-primary after:rounded-full">
-          preço de mãe pra mãe
+          preço que cabe no coração
         </span>
         <h2 className="font-headline font-extrabold tracking-[-0.03em] leading-[1.05] text-on-surface text-[clamp(2.25rem,5vw,4rem)] mt-1.5 mb-2">
-          Menos que <span className="text-primary">uma manicure</span>.
+          Menos que um <span className="text-primary">combo de hambúrguer</span>.
           <br />
           Dura uma{" "}
           <span className="inline-block bg-tertiary-container px-3 -rotate-[1.5deg] rounded-md">
@@ -28,10 +30,7 @@ export default function Pricing() {
         </h2>
 
         <div className="relative inline-block bg-white p-10 md:p-14 rounded-[28px] -rotate-[1.5deg] mt-8 shadow-[0_0_0_4px_var(--color-tertiary-container),0_0_0_8px_var(--color-on-surface),0_24px_60px_rgba(177,11,104,0.20)]">
-          <span
-            aria-hidden="true"
-            className="absolute -top-7 left-1/2 -translate-x-1/2 rotate-[8deg] text-4xl"
-          >
+          <span aria-hidden="true" className="absolute -top-7 left-1/2 -translate-x-1/2 rotate-[8deg] text-4xl">
             💛
           </span>
 
@@ -53,11 +52,11 @@ export default function Pricing() {
           </div>
 
           <div className="text-[13px] font-bold text-primary uppercase tracking-[0.12em] mb-4">
-            só essa semana
+            somente esta semana
           </div>
 
           <div className="font-script text-[28px] text-on-surface mb-6">
-            paga uma vez, é seu pra sempre
+            pague uma vez. a lembrança fica para sempre.
           </div>
 
           <ul className="text-left max-w-[320px] mx-auto my-6 space-y-1">
@@ -75,7 +74,7 @@ export default function Pricing() {
             href="/pedido"
             className="inline-flex items-center gap-2.5 bg-gradient-to-br from-primary to-primary-container text-white px-7 py-4 rounded-full font-extrabold text-base -rotate-2 hover:rotate-0 hover:scale-[1.04] transition-all duration-200 sticker-shadow sticker-shadow-hover focus-visible:ring-2 focus-visible:ring-secondary-container focus-visible:ring-offset-2 focus-visible:outline-none"
           >
-            Quero o meu agora!
+            Quero minha música!
             <ArrowRight className="h-5 w-5" aria-hidden="true" strokeWidth={2.5} />
           </a>
         </div>

@@ -3,12 +3,16 @@ import Navbar from "@/components/landing/navbar";
 import Hero from "@/components/landing/hero";
 import LiveTicker from "@/components/landing/live-ticker";
 import HowItWorks from "@/components/landing/how-it-works";
+import Benefits from "@/components/landing/benefits";
 import StyleBrowser from "@/components/styles/style-browser";
 import Pricing from "@/components/landing/pricing";
 import Testimonials from "@/components/landing/testimonials";
+import Objection from "@/components/landing/objection";
+import FinalCta from "@/components/landing/final-cta";
 import Footer from "@/components/landing/footer";
+import MusicFAB from "@/components/music-fab";
 
-export const revalidate = 3600; // ISR: revalidate every 1 hour
+export const revalidate = 3600;
 
 export default async function Home() {
   let templates: { id: string; name: string; slug: string; exampleImages: string[]; tags: string[]; popularity: number }[] = [];
@@ -16,14 +20,7 @@ export default async function Home() {
     templates = await prisma.styleTemplate.findMany({
       where: { active: true },
       orderBy: { popularity: "desc" },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        exampleImages: true,
-        tags: true,
-        popularity: true,
-      },
+      select: { id: true, name: true, slug: true, exampleImages: true, tags: true, popularity: true },
     });
   } catch (err) {
     console.error(JSON.stringify({ level: "error", event: "home_styles_fetch_failed", error: err instanceof Error ? err.message : String(err), service: "web" }));
@@ -61,11 +58,15 @@ export default async function Home() {
         <Hero />
         <LiveTicker />
         <HowItWorks />
-        <StyleBrowser styles={styles} />
+        <Benefits />
+        {styles.length > 0 && <StyleBrowser styles={styles} />}
         <Pricing />
         <Testimonials />
+        <Objection />
+        <FinalCta />
         <Footer />
       </main>
+      <MusicFAB />
     </>
   );
 }

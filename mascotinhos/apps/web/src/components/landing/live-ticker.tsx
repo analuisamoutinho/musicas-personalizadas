@@ -1,19 +1,15 @@
-// Hard-coded for now; could later read from `order.completedAt` desc.
-// Mix of girl/boy names so the social proof reads inclusive.
 const tickerItems = [
-  { emoji: "🎂", name: "Helena, 3 anos", action: "virou princesa há 12 minutos" },
-  { emoji: "🚀", name: "Lucas, 5 anos", action: "virou astronauta há 18 minutos" },
-  { emoji: "🦋", name: "Sofia, 4 anos", action: "virou fadinha há 24 minutos" },
-  { emoji: "🦁", name: "Theo, 6 anos", action: "virou explorador há 31 minutos" },
-  { emoji: "🐚", name: "Maitê, 4 anos", action: "virou sereia há 38 minutos" },
-  { emoji: "💥", name: "Pedro, 7 anos", action: "virou super-herói há 44 minutos" },
+  { emoji: "❤️", name: "Juliana, SP", action: "recebeu música para o namorado há 8 minutos" },
+  { emoji: "🎂", name: "Camila, GO", action: "recebeu música de aniversário há 14 minutos" },
+  { emoji: "👨‍👩‍👧", name: "Rafael, MG", action: "recebeu homenagem para os pais há 21 minutos" },
+  { emoji: "💍", name: "Fernanda, SP", action: "recebeu pedido de casamento em música há 29 minutos" },
+  { emoji: "✨", name: "Beatriz, RJ", action: "recebeu homenagem especial há 35 minutos" },
+  { emoji: "👶", name: "Mariana, PR", action: "recebeu música para os filhos há 42 minutos" },
 ];
 
-// Duplicate so the -50% translate forms a seamless loop.
 const items = [...tickerItems, ...tickerItems];
 
 export default function LiveTicker() {
-
   return (
     <div
       aria-label="Pedidos recentes"
