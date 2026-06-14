@@ -3,10 +3,10 @@ import { Redis } from "@upstash/redis";
 import prisma from "@mascotinhos/db";
 import { sendMusicReadyEmail } from "@/lib/email";
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+function getRedis(): Redis | null {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
+  return new Redis({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN });
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,17 +40,24 @@ export async function POST(req: NextRequest) {
     });
 
     // Send email notification if we have the client's email
-    const cached = await redis.get<string>(`order_email:${orderId}`);
-    if (cached) {
-      const { email, nomeCliente, nomeHomenageado } = JSON.parse(typeof cached === "string" ? cached : JSON.stringify(cached));
-      sendMusicReadyEmail({
-        to: email,
-        nomeCliente,
-        nomeHomenageado,
-        orderId,
-        musicaTitulo: order.musicaTitulo,
-        audioUrl,
-      }).catch((e) => console.error("[email] music ready failed", e));
+    try {
+      const redis = getRedis();
+      if (redis) {
+        const cached = await redis.get<string>(`order_email:${orderId}`);
+        if (cached) {
+          const { email, nomeCliente, nomeHomenageado } = JSON.parse(typeof cached === "string" ? cached : JSON.stringify(cached));
+          sendMusicReadyEmail({
+            to: email,
+            nomeCliente,
+            nomeHomenageado,
+            orderId,
+            musicaTitulo: order.musicaTitulo,
+            audioUrl,
+          }).catch((e) => console.error("[email] music ready failed", e));
+        }
+      }
+    } catch (redisErr) {
+      console.error("[redis] failed to read email, continuing:", redisErr);
     }
 
     console.log(JSON.stringify({ level: "info", event: "kie_audio_entregue", orderId, audioUrl }));

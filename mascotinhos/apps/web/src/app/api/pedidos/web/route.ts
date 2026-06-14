@@ -4,10 +4,10 @@ import prisma from "@mascotinhos/db";
 import { createOrUpdateCustomer, createPixCharge } from "@mascotinhos/payments";
 import { sendOrderConfirmationEmail } from "@/lib/email";
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+function getRedis(): Redis | null {
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
+  return new Redis({ url: process.env.UPSTASH_REDIS_REST_URL, token: process.env.UPSTASH_REDIS_REST_TOKEN });
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -80,8 +80,15 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Store email in Redis for delivery notification (TTL 7 days)
-    await redis.set(`order_email:${order.id}`, JSON.stringify({ email, nomeCliente, nomeHomenageado }), { ex: 604800 });
+    // Store email in Redis for delivery notification (TTL 7 days) — non-blocking
+    try {
+      const redis = getRedis();
+      if (redis) {
+        await redis.set(`order_email:${order.id}`, JSON.stringify({ email, nomeCliente, nomeHomenageado }), { ex: 604800 });
+      }
+    } catch (redisErr) {
+      console.error("[redis] failed to store email, continuing:", redisErr);
+    }
 
     // Send confirmation email (non-blocking)
     sendOrderConfirmationEmail({ to: email, nomeCliente, nomeHomenageado, orderId: order.id }).catch(
