@@ -20,6 +20,7 @@ const asaasWebhookSchema = z.object({
   }),
 });
 import { enqueueGeneration, sendPaymentConfirmationMessages } from "@mascotinhos/bot-engine";
+import { iniciarGeracaoKie, type KieGeracaoInput } from "@/lib/kie-service";
 
 export function GET(): NextResponse {
   return NextResponse.json({ error: "Method Not Allowed" }, { status: 405 });
@@ -96,6 +97,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     status: "PENDING" | "CONFIRMED" | "FAILED" | "REFUNDED";
     order: {
       id: string;
+      productType: string | null;
+      musicaTitulo: string | null;
+      musicaLetra: string | null;
+      musicaEstiloDetalhado: string | null;
+      musicaVoz: string | null;
       client: {
         id: string;
         whatsappSenderId: string;
@@ -226,39 +232,44 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Enqueue generation (stub — Story 4.1 implements actual QStash publish)
-    try {
-      if (!enqueueGeneration.execute) {
-        console.log(
-          JSON.stringify({
-            level: "warn",
-            event: "payment_webhook_enqueue_not_available",
-            orderId,
-            service: "web",
-          })
-        );
-      } else {
-        const ctx = {
-          toolCallId: "payment-webhook",
-          messages: [],
-          abortSignal: undefined as unknown as AbortSignal,
-        };
-        await enqueueGeneration.execute({ orderId }, ctx);
-      }
-    } catch (enqueueErr) {
-      console.log(
-        JSON.stringify({
-          level: "warn",
-          event: "payment_webhook_enqueue_failed",
+    // Enqueue generation — route by product type
+    const order = payment.order;
+    if (order?.productType === "MUSICA_PERSONALIZADA") {
+      // Music flow: trigger Kie.ai audio generation
+      const { musicaTitulo, musicaLetra, musicaEstiloDetalhado, musicaVoz } = order;
+      if (musicaTitulo && musicaLetra && musicaEstiloDetalhado && musicaVoz) {
+        const kieInput: KieGeracaoInput = {
+          titulo: musicaTitulo,
+          letra: musicaLetra,
+          estiloDetalhado: musicaEstiloDetalhado,
+          voz: musicaVoz as KieGeracaoInput["voz"],
           orderId,
-          error:
-            enqueueErr instanceof Error
-              ? enqueueErr.message
-              : String(enqueueErr),
-          service: "web",
-        })
-      );
-      // Do NOT return 500 here — the payment is confirmed, queue failure must not fail the webhook
+        };
+        iniciarGeracaoKie(kieInput).then((taskId) => {
+          console.log(JSON.stringify({ level: "info", event: "kie_generation_started", orderId, taskId, service: "web" }));
+        }).catch((err) => {
+          console.log(JSON.stringify({ level: "warn", event: "kie_generation_failed", orderId, error: String(err), service: "web" }));
+        });
+      } else {
+        console.log(JSON.stringify({ level: "warn", event: "kie_lyrics_not_ready", orderId, service: "web" }));
+      }
+    } else {
+      // Image flow (MASCOTINHO): enqueue via QStash
+      try {
+        if (!enqueueGeneration.execute) {
+          console.log(JSON.stringify({ level: "warn", event: "payment_webhook_enqueue_not_available", orderId, service: "web" }));
+        } else {
+          const ctx = {
+            toolCallId: "payment-webhook",
+            messages: [],
+            abortSignal: undefined as unknown as AbortSignal,
+          };
+          await enqueueGeneration.execute({ orderId }, ctx);
+        }
+      } catch (enqueueErr) {
+        console.log(JSON.stringify({ level: "warn", event: "payment_webhook_enqueue_failed", orderId, error: enqueueErr instanceof Error ? enqueueErr.message : String(enqueueErr), service: "web" }));
+        // Do NOT return 500 here — the payment is confirmed, queue failure must not fail the webhook
+      }
     }
   } else if (event === "PAYMENT_OVERDUE" || event === "PAYMENT_DELETED") {
     try {

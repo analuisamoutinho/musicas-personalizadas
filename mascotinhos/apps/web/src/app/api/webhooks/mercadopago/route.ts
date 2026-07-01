@@ -6,7 +6,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@mascotinhos/db";
 import { verificarPagamento } from "@/lib/mercadopago-service";
-import { enviarAudioWhatsApp, enviarMensagemWhatsApp } from "@/lib/whatsapp-service";
+import { enviarMensagemWhatsApp } from "@/lib/whatsapp-service";
+import { iniciarGeracaoKie, type KieGeracaoInput } from "@/lib/kie-service";
 
 export async function POST(req: NextRequest) {
   try {
@@ -67,34 +68,41 @@ export async function POST(req: NextRequest) {
       prisma.order.update({
         where: { id: pedido.id },
         data:  {
-          orderStatus:       "PAID",
-          conversationState: "COMPLETED",
+          orderStatus:       "GENERATING",
+          conversationState: "GENERATING",
         },
       }),
     ]);
 
-    // 2. Enviar áudio final via WhatsApp
-    // O áudio final é o mesmo preview (não tem watermark no Kie.ai)
-    const audioFinalUrl = pedido.musicaAudioFinalUrl || pedido.musicaAudioPreviewUrl;
-
-    if (!audioFinalUrl) {
-      console.error(`[mp-webhook] Sem audioUrl para pedido ${pedido.id}`);
-      await enviarMensagemWhatsApp({
-        to:   telefone,
-        text: "Pagamento confirmado! ✅ Seu arquivo chegará em instantes. 🎶",
-      });
-      return NextResponse.json({ recebido: true });
-    }
-
-    await enviarAudioWhatsApp({
-      to:       telefone,
-      audioUrl: audioFinalUrl,
-      caption:  "Aqui está sua música completa 🎶 Espero que essa surpresa emocione muito vocês. ❤️",
+    // 2. Avisar cliente que o pagamento foi recebido e a música está sendo gerada
+    await enviarMensagemWhatsApp({
+      to:   telefone,
+      text: "Pagamento confirmado! ✅ Sua música está sendo gerada agora. Em alguns minutos você recebe aqui mesmo. 🎶",
     });
+
+    // 3. Disparar geração de áudio no Kie.ai
+    const { musicaTitulo, musicaLetra, musicaEstiloDetalhado, musicaVoz } = pedido;
+
+    if (musicaTitulo && musicaLetra && musicaEstiloDetalhado && musicaVoz) {
+      const kieInput: KieGeracaoInput = {
+        titulo: musicaTitulo,
+        letra: musicaLetra,
+        estiloDetalhado: musicaEstiloDetalhado,
+        voz: musicaVoz as KieGeracaoInput["voz"],
+        orderId: pedido.id,
+      };
+      iniciarGeracaoKie(kieInput).then((taskId) => {
+        console.log(JSON.stringify({ level: "info", event: "kie_generation_started", orderId: pedido.id, taskId }));
+      }).catch((err) => {
+        console.log(JSON.stringify({ level: "warn", event: "kie_generation_failed", orderId: pedido.id, error: String(err) }));
+      });
+    } else {
+      console.log(JSON.stringify({ level: "warn", event: "kie_lyrics_not_ready", orderId: pedido.id }));
+    }
 
     console.log(JSON.stringify({
       level: "info",
-      event: "pagamento_confirmado_e_entregue",
+      event: "pagamento_confirmado_geracao_iniciada",
       orderId: pedido.id,
       paymentId,
     }));

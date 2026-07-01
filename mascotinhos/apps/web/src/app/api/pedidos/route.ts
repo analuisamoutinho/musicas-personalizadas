@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         // campos do Mascotinhos
         client: { connect: { whatsappSenderId: telefone } },
         productType: "MUSICA_PERSONALIZADA",
-        conversationState: "MUSICA_CONFIRMING_ORDER",
+        conversationState: "AWAITING_PAYMENT",
         // briefing
         musicaNomeHomenageado: nomeHomenageado,
         musicaVinculo: vinculo || "",

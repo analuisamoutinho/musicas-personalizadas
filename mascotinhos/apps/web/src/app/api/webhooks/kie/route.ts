@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 import prisma from "@mascotinhos/db";
 import { sendMusicReadyEmail } from "@/lib/email";
+import { enviarAudioWhatsApp } from "@/lib/whatsapp-service";
 
 function getRedis(): Redis | null {
   if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null;
@@ -37,6 +38,7 @@ export async function POST(req: NextRequest) {
         conversationState: "DELIVERING",
         orderStatus: "DELIVERED",
       },
+      include: { client: true },
     });
 
     // Send email notification if we have the client's email
@@ -58,6 +60,18 @@ export async function POST(req: NextRequest) {
       }
     } catch (redisErr) {
       console.error("[redis] failed to read email, continuing:", redisErr);
+    }
+
+    // Deliver audio via WhatsApp
+    const telefone = order.client?.whatsappSenderId;
+    if (telefone) {
+      enviarAudioWhatsApp({
+        to: telefone,
+        audioUrl,
+        caption: "Sua música ficou pronta! 🎶 Espero que essa surpresa emocione muito vocês. ❤️",
+      }).catch((err) => {
+        console.error("[kie-webhook] falha ao enviar áudio no WhatsApp:", err);
+      });
     }
 
     console.log(JSON.stringify({ level: "info", event: "kie_audio_entregue", orderId, audioUrl }));
